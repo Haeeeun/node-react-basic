@@ -1,11 +1,12 @@
-const express = require('express') //express 모듈 가져오기
-const app = express() //express app 만들기
-const port = 3000 //백서버 port number
+const express = require('express'); //express 모듈 가져오기
+const app = express(); //express app 만들기
+const port = 3000; //백서버 port number
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 
 const config = require('./config/key');
 
+const { auth } = require('./middleware/auth');
 const { User } = require('./models/User');
 
 //application/x-www-form-urlencoded 이런 형태를 분석 할 수 있게끔 하기 위해
@@ -24,7 +25,7 @@ app.get('/', (req, res) => {
     res.send('Hello World! 노드몬 사용중입니다!')
 }) //루트 디렉토리 '/'에 오면 Hello World 이 출력되게끔
 
-app.post('/register', (req,res) => {
+app.post('/api/users/register', (req,res) => {
     //회원 가입 할 때 필요한 정보들을 client 에서 가져오면
     //그것들을 데이터 베이스에 넣어준다.
 
@@ -39,7 +40,7 @@ app.post('/register', (req,res) => {
     })
 })
 
-app.post('/login', (req, res) => {
+app.post('/api/users/login', (req, res) => {
     //요청된 이메일을 데이터베이스에서 찾는다
     User.findOne({ email: req.body.email }, (err, user) =>{
         if(!user){
@@ -70,8 +71,23 @@ app.post('/login', (req, res) => {
 
             })
         })
-
     })
+})
+
+//auth 는 req 하기 전에 실행되는 미들웨어
+//role 0 --> 일반 유저, role 1 --> 관리자
+app.get('/api/users/auth', auth , (req,res) => {
+    res.status(200).json({
+        _id: req.user._id,
+        isAdmin: req.user.role === 0 ? false : true,
+        isAuth: true,
+        email: req.user.email,
+        name: req.user.name,
+        lastname: req.user.lastname,
+        role: req.user.role,
+        image: req.user.image
+    })
+
 })
 
 app.listen(port, () => {
