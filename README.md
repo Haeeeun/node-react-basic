@@ -1,6 +1,6 @@
 # react-basic
 
-##client 구조
+## client 구조
 | 폴더이름 | 설명 |
 | --- | --- |
 | _action, _reducer | Redux 를 위한 폴더 |
