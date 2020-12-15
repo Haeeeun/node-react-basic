@@ -1,4 +1,4 @@
-# react-basic
+# node-react-basic
 
 ## client 구조
 | 폴더이름 | 설명 |

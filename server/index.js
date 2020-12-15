@@ -1,6 +1,5 @@
 const express = require('express'); //express 모듈 가져오기
 const app = express(); //express app 만들기
-const port = 3000; //백서버 port number
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
@@ -24,6 +23,10 @@ mongoose.connect(config.mongoURI,{
 app.get('/', (req, res) => {
     res.send('Hello World! 노드몬 사용중입니다!')
 }) //루트 디렉토리 '/'에 오면 Hello World 이 출력되게끔
+
+app.get('/api/hello', (req, res) => {
+    res.send("안녕하세요")
+})
 
 app.post('/api/users/register', (req,res) => {
     //회원 가입 할 때 필요한 정보들을 client 에서 가져오면
@@ -101,6 +104,8 @@ app.get('/api/users/logout', auth, (req, res) => {
     })
 })
 
+
+const port = 5000; //백서버 port number
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
